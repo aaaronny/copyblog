@@ -1,10 +1,15 @@
+
 <script id="jquery" src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
 <div id='outScr'>
-	<script>
+<script>
 
     function estrai(){
         
+//        var aut = 'd2Vic2Vydjp3czEyMzR3cw==';
+//        var wp = 'http://healtnlife.altervista.org';
+        
+        var inpImg = '<input type="hidden" name="urlImg" id="urlImg" value="' + urlImmagine + '" />';
         var orig = document.getElementsByClassName('google-src-text');
         
         for (i=0; i<orig.length; ++i)
@@ -16,10 +21,16 @@
         y = y.replace(/<h2\b[^>]*>/gi,"<h2>");
         y = y.replace(/<span\b[^>]*>/gi,"");
         y = y.replace(/<\/span>/gi,"");
+        y = '<div id="all">' + y + '</div>';
+        y = '<form action="http://fclab.altervista.org/cpbl/view.php" method="post" id="myfr"><input type="hidden" value="" name="content" id="content" /> ' + inpImg + '<input type="submit" /></form>' + y;
+        y += '<script> document.getElementById("content").value = document.getElementById("all").innerHTML; alert("Loading..."); document.getElementById("myfr").submit();</sc' + 'ript>';
+
         alert('Conversione in corso...');
-        document.write(y);    
+
+        document.write(y);  
+
     }
-        
+
 </script>
 </div>
 
@@ -27,8 +38,50 @@
 <div id="main" style="display: none"></div>
 
 <script id="engine">
-
-	var preurl = '/copia?url=';
+    
+        var aut = 'cmVsb2FkbGlmZTpzb21tZXB1c2JvODA=';
+        var wp = 'http://reloadlife.altervista.org';
+        
+        var preurl = '/copia?url=';
+        
+        var nonAttendere = false;
+    
+    var blob = null;
+function ulda(webUrl, imgName, wpUrl, b64auth, tit, h1, txt) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', webUrl);
+    xhr.responseType = 'blob';
+    xhr.onload = function() {
+        blob = xhr.response;
+        var formData = new FormData();
+        var fileg = new File([blob], imgName, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+        });
+        formData.append('file', fileg);
+        $.ajax({
+            url: wpUrl + '/wp-json/wp/v2/media',
+            method: 'POST',
+            data: formData,
+            crossDomain: true,
+            contentType: false,
+            processData: false,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Basic ' + b64auth);
+                xhr.setRequestHeader('Content-Disposition', ': attachment; filename=' + imgName);
+            },
+            success: function(data) {
+                alert('IMMAGINE FATTA');
+                secondpart(tit,h1,txt,data.id);
+                console.log(data);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+    xhr.send();
+}
     
     $.get(preurl + 'https://www.healthline.com/health-news', function( data ) {
         $('#all').html($(data).find('ol').html());
@@ -38,8 +91,7 @@
         }
     });
     
-    function lsa(url){        
-    var outputScr = $('#outScr').html();
+    function lsa(url){
     
     $.get(preurl + url, function( data ) {
         cont = '<div>' + data + '</div>';
@@ -50,18 +102,27 @@
         var h1 = '<h1>' + tit + '</h1>';
         var txt = $(cont).find('article').html();
         try {
-            var urlImg = $(cont).find('article').find('img').attr('src');
+            urlImg = $(cont).find('article').find('img').attr('src');
             urlImg = urlImg.replace('//i0.wp.com/', 'http://');
             urlImg = urlImg.replace(/[?]{1}.*/, '');
-            //urlImg = preurl + urlImg;
             alert(urlImg);
+            ulda(urlImg, 'reloadLife.jpg', wp, aut, tit, h1, txt);
         } catch{
             alert('IMMAGINE NON PRESENTE!');
+            secondpart(tit,h1,txt,null)
         }
         
+        
+});
+    
+    }
+    
+    function secondpart (tit, h1, txt, urlImg){
+        
+        var outputScr = $('#outScr').html();
         document.title = tit;
         
-        var product = h1 + txt;
+        var product = h1 + ' ' + txt;
         
         product = product.replace(/<h2\b[^>]*>/gi,"<h2>");
         
@@ -107,31 +168,28 @@
         
         var button = '<div id="pulsante" onclick="estrai()" style="background-color: black; opacity:0.5; width:100%; height: 100%; position: absolute; top: 0px; left: 0px;"></div>"'
         
-        var finalBlob = '<html><head><title>' + tit + '</title>' + outputScr + '</head><body>' + button + '<div id="main">' + $('#main').html() + '</div></body></html>';
+        var scrImg = '<scr' + 'ipt> var urlImmagine = "' + urlImg + '"; </scr' + 'ipt>';
+        
+        var finalBlob = '<html><head><title>' + tit + '</title>' + scrImg + outputScr + '</head><body>' + button + '<div id="main">' + $('#main').html() + '</div></body></html>';
         
         var blob = new Blob([finalBlob], {type:"text/html"});
         var testo = window.URL.createObjectURL(blob);
         var file = tit + '.html';
         
-        var downloadLink = document.createElement("a");
-        downloadLink.download = file;
-        downloadLink.innerHTML = "Download File";
-        downloadLink.href = testo;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
- 
-        downloadLink.click();
-        
-        var imgdw = '<button style="height: 70px; width:140px; color: white; background: red; border: none; font-size: 14pt" onclick="location.reload();">TORNA INDIETRO</button><br/><br/><img src="' + urlImg + '" />';
-        $('#all').html(imgdw);
+        $.post( "http://fclab.altervista.org/cpbl/write.php", { content: finalBlob } )
+            .done(function( data ) {
+                if (JSON.parse(data).result == 'OK'){
+                    alert('Scrittura completata');
+                    window.location = 'https://translate.googleusercontent.com/translate_c?depth=1&rurl=trahttps://translate.googleusercontent.com/translate_c?depth=1&rurl=translate.google.com&sl=auto&sp=nmt4&tl=it&u=http://fclab.altervista.org/cpbl/blankpage.html&xid=25657,15700002,15700022,15700124,15700149,15700186,15700191,15700201,15700237,15700242&usg=ALkJrhjvTruuvLNFbrsDHJIjhGuR4jPbOA';
+                }
+            });
         
         $('body').removeAttr('style');
                 
         $('#engine').remove();
         $('#jquery').remove();
-        
-});
-    
     }
-        
+    
+    //lsa();
+    
 </script>
