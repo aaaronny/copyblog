@@ -49,7 +49,7 @@
     var blob = null;
 function ulda(webUrl, imgName, wpUrl, b64auth, tit, h1, txt) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', webUrl);
+    xhr.open('GET', preurl + webUrl);
     xhr.responseType = 'blob';
     xhr.onload = function() {
         blob = xhr.response;
