@@ -33,6 +33,8 @@ public class BlogController {
     public ResponseEntity<byte[]> getImg(@RequestParam("url") String path) {
 
         ResponseEntity<byte[]> response = null;
+        
+        try {
 
         URL url = new URL(path);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -49,7 +51,9 @@ public class BlogController {
         byte[] img = output.toByteArray();
         
             response = new ResponseEntity<byte[]>(img, HttpStatus.OK);
-
+        } catch (Exception e){
+            System.out.println(e);
+        }
         return response;
     }
 
