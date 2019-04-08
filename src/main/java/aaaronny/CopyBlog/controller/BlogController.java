@@ -29,7 +29,7 @@ public class BlogController {
         return response;
     }
 
-    @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    @RequestMapping(value = "/image", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getImg(@RequestParam("url") String path) {
 
         ResponseEntity<byte[]> response = null;
