@@ -3,7 +3,7 @@ package aaaronny.CopyBlog.controller;
 import org.springframework.http.*;
 import java.io.*;
 import java.net.*;
-import java.utils.*;
+import java.util.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +32,7 @@ public class BlogController {
     @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImg(@RequestParam("url") String path) {
 
-        ResponseEntity<String> response = null;
+        ResponseEntity<byte[]> response = null;
 
         URL url = new URL(path);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -48,11 +48,7 @@ public class BlogController {
         }
         byte[] img = output.toByteArray();
         
-        if (!res.equals("null")) {
             response = new ResponseEntity<byte[]>(img, HttpStatus.OK);
-        } else {
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
         return response;
     }
