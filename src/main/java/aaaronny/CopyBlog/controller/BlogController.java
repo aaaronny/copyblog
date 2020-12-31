@@ -32,7 +32,7 @@ public class BlogController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getImg(@RequestParam("url") String path) {
+    public ResponseEntity<byte[]> getImg64(@RequestParam("url") String path) {
 
         ResponseEntity<byte[]> response = null;
         
