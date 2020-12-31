@@ -59,6 +59,35 @@ public class BlogController {
         return response;
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @RequestMapping(value = "/image64", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<String> getImg(@RequestParam("url") String path) {
+
+        ResponseEntity<byte[]> response = null;
+        
+        try {
+
+        URL url = new URL(path);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        URLConnection conn = url.openConnection();
+        conn.setRequestProperty("User-Agent", "Firefox");
+
+        try (InputStream inputStream = conn.getInputStream()) {
+            int n = 0;
+            byte[] buffer = new byte[1024];
+            while (-1 != (n = inputStream.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        }
+        byte[] img = output.toByteArray();
+        
+            response = new ResponseEntity<String>(img, Base64.getEncoder().encodeToString(img));
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        return response;
+    }
+
     //produces = MediaType.IMAGE_JPEG_VALUE
 
 }
