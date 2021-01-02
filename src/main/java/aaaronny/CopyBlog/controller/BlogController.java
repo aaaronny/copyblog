@@ -60,10 +60,10 @@ public class BlogController {
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @RequestMapping(value = "/image64", method = RequestMethod.GET, produces = String)
-    public ResponseEntity<String> getImg(@RequestParam("url") String path) {
+    @RequestMapping(value = "/image64", method = RequestMethod.GET)
+    public String getImg(@RequestParam("url") String path) {
 
-        ResponseEntity<byte[]> response = null;
+        String response = null;
         
         try {
 
@@ -81,7 +81,7 @@ public class BlogController {
         }
         byte[] img = output.toByteArray();
         
-            response = new ResponseEntity<String>(img, Base64.getEncoder().encodeToString(img));
+            response = Base64.getEncoder().encodeToString(img);
         } catch (Exception e){
             System.out.println(e);
         }
